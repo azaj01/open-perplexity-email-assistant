@@ -109,8 +109,9 @@ def start_trigger_listener():
     print("⚡ Press Ctrl+C to stop\n")
 
     listener = composio_client.triggers.subscribe()
+    trigger_id = os.getenv('GMAIL_TRIGGER_ID')
 
-    @listener.handle()
+    @listener.handle(trigger_id=trigger_id)
     def callback_function(event):
         print(f"🔔 Trigger received: {event.get('trigger_name', 'Unknown')}")
         asyncio.run(process_email_trigger(event))

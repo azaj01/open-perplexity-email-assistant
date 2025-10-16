@@ -21,7 +21,7 @@ class EmailHandler:
 
         metadata = trigger_data.get("metadata", {})
         connected_account = metadata.get("connected_account", {})
-        connected_account_id = connected_account.get("id", os.getenv('GMAIL_USER_ID'))
+        connected_account_id = connected_account.get("id")
 
         return {
             "sender_email": sender_email,
