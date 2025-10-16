@@ -1,0 +1,18 @@
+[project]
+name = "open-perplexity-assistant"
+version = "0.1.0"
+description = "An intelligent email assistant that processes emails via webhooks using Composio and LangGraph"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "composio-langchain",
+    "langchain-openai",
+    "langgraph",
+    "langchain-mcp-adapters",
+    "fastapi",
+    "uvicorn[standard]",
+    "python-dotenv",
+    "pydantic",
+    "psycopg2-binary",
+    "sqlalchemy",
+]
