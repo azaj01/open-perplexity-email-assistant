@@ -1,4 +1,3 @@
-import os
 from typing import Dict, Any
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.prebuilt import create_react_agent
@@ -16,25 +15,20 @@ class SessionManager:
         """Create Tool Router session and agent for user."""
         print(f"🔧 Creating Tool Router session for: {user_id}")
 
-        session = self.composio_client.experimental.tool_router.create_session(
-            user_id=user_id,
-            toolkits=[
-                {'toolkit': 'gmail', 'auth_config': os.getenv("GMAIL_AUTH_CONFIG")},
-            ],
-            manually_manage_connections=True
-        )
+        session = self.composio_client.create(user_id=user_id)
 
-        mcp_url = session['url']
+        mcp_url = session.mcp.url
+        mcp_headers = session.mcp.headers
         print(f"✅ Session URL: {mcp_url[:60]}...")
 
-        graph = await self._build_graph(mcp_url)
+        graph = await self._build_graph(mcp_url, mcp_headers)
 
         return {'session': session, 'mcp_url': mcp_url, 'graph': graph}
 
-    async def _build_graph(self, mcp_url: str):
+    async def _build_graph(self, mcp_url: str, mcp_headers: dict = None):
         """Build LangGraph agent with MCP tools."""
         mcp_client = MultiServerMCPClient({
-            "composio": {"url": mcp_url, "transport": "streamable_http"}
+            "composio": {"url": mcp_url, "transport": "streamable_http", "headers": mcp_headers or {}}
         })
 
         tools = await mcp_client.get_tools()
